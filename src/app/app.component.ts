@@ -9,6 +9,19 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 export class AppComponent {
   viewMode = '';
 
+  offshores = [
+    {'id': 1, 'name': "Chennai"},
+    {'id': 2, 'name': "Bangalore"},
+    {'id': 3, 'name': "Hyderabad"},
+    {'id': 4, 'name': "Pune"},
+    {'id': 5, 'name': "Kochi"}
+  ];
+
+  onshores = [
+    {'id': 1, 'name': "US"},
+    {'id': 2, 'name': "Non US"}
+  ];
+
   form = new FormGroup({
     'associateName': new FormControl('', [
       Validators.required, 
