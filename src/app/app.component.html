@@ -1,5 +1,5 @@
 <div class="container my-3">
-    <h1 class="my-2">Form Validation</h1>
+    <h1 class="my-2">Form Validation <span style="color: red; font-size: 40px;">*</span></h1>
     <!-- Form -->
     <form [formGroup]="form" (ngSubmit)="submit(form)">
         <!-- Associate Name -->
@@ -31,19 +31,16 @@
         <div class="form-group">
             <div class="form-check">
                 <label class="form-check-label mr-5" for="exampleRadios1">
-                  <input name="shore" class="form-check-input" type="radio" id="offshore" value="offshore" (change)="viewMode = 'offshore'">Offshore
+                  <input name="shore" class="form-check-input" type="radio" id="offshore" value="offshore" (change)="setLocation($event)">Offshore
                 </label>
                 <label class="form-check-label" for="exampleRadios2">
-                  <input name="shore" class="form-check-input" type="radio" id="onshore" value="onshore" (change)="viewMode = 'onshore'">Onshore
+                  <input name="shore" class="form-check-input" type="radio" id="onshore" value="onshore" (change)="setLocation($event)">Onshore
                 </label>
             </div>
         </div>
         <!-- Dropdown List for Location -->
         <div class="form-group">
             <div [ngSwitch]="viewMode">
-                <select *ngSwitchCase="''" id="location" class="form-control">
-                  <option value="" selected disabled>Select Location</option>
-                </select>
                 <select *ngSwitchCase="'offshore'" formControlName="offshore" name="offshore" id="offshore" class="form-control">
                   <option value="" selected disabled>Select Location</option>
                   <option *ngFor="let offshore of offshores" [ngValue]="offshore">{{ offshore.name }}</option>
@@ -52,68 +49,41 @@
                   <option value="" selected disabled>Select Location</option>
                   <option *ngFor="let onshore of onshores" [ngValue]="onshore">{{ onshore.name }}</option>
                 </select>
+                <select *ngSwitchCase="'others'" id="location" class="form-control">
+                    <option value="" selected disabled>Select Location</option>
+                </select>
             </div>
-            <div *ngIf="offshore.touched && offshore.invalid" class="alert alert-danger">
-                <div *ngIf="offshore.errors.required">Please select Location.</div>
+            <div *ngIf="offshore?.touched && offshore?.invalid" class="alert alert-danger">
+                <div *ngIf="offshore.errors?.required">Please select Location.</div>
             </div>
-            <div *ngIf="onshore.touched && onshore.invalid" class="alert alert-danger">
-                <div *ngIf="onshore.errors.required">Please select Location.</div>
+            <div *ngIf="onshore?.touched && onshore?.invalid" class="alert alert-danger">
+                <div *ngIf="onshore.errors?.required">Please select Location.</div>
             </div>
         </div>
         <!-- Checkboxes -->
         <div class="from-group">
             <div class="row no-gutters my-4">
-                <div class="col-lg-4">
-                    <div class="form-check my-1">
-                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                        <label class="form-check-label" for="defaultCheck1">HTML5,CSS3,JS</label>
-                    </div>
-                    <div class="form-check my-1">
-                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck2">
-                        <label class="form-check-label" for="defaultCheck2">SASS</label>
-                    </div>
-                    <div class="form-check my-1">
-                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck3">
-                        <label class="form-check-label" for="defaultCheck3">ES5,ES6,ES7...</label>
-                    </div>
-                    <div class="form-check my-1">
-                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck4">
-                        <label class="form-check-label" for="defaultCheck4">Bootstap</label>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="form-check my-1">
-                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck5">
-                        <label class="form-check-label" for="defaultCheck5">Angular 8</label>
-                    </div>
-                    <div class="form-check my-1">
-                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck6">
-                        <label class="form-check-label" for="defaultCheck6">React JS</label>
-                    </div>
-                    <div class="form-check my-1">
-                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck7">
-                        <label class="form-check-label" for="defaultCheck7">Veu JS</label>
-                    </div>
-                    <div class="form-check my-1">
-                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck8">
-                        <label class="form-check-label" for="defaultCheck8">TypeScript</label>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="form-check my-1">
-                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck9">
-                        <label class="form-check-label" for="defaultCheck9">Express JS</label>
-                    </div>
-                    <div class="form-check my-1">
-                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck10">
-                        <label class="form-check-label" for="defaultCheck10">Node JS</label>
-                    </div>
-                    <div class="form-check my-1">
-                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck11">
-                        <label class="form-check-label" for="defaultCheck11">Mongo DB</label>
+                <div class="col-lg-4" *ngFor="let skill of skills">
+                    <div class="form-check form-control my-1" style="border: none;">
+                        <label class="form-check-label" for="defaultCheck1">
+                            <input formArrayName="topic" name="topic" id="topic" class="form-check-input" type="checkbox" [ngValue]="skill" (change)="changeTopic(skill)"> {{ skill.name }}
+                        </label>
                     </div>
                 </div>
             </div>
+            <!-- <div *ngIf="topic.errors.minLengthArray" class="alert alert-danger">Please select Min 5 skills.</div> -->
+            <div *ngIf="topic.touched && topic.invalid" class="alert alert-danger">
+                <div *ngIf="topic.errors.noOfTopics">Please select Min 5 skills.</div>
+            </div>
+        </div>
+        <!-- Upload Image -->
+        <div class="form-group">
+            <label for="file">Upload Profile</label>
+            <input formControlName="file" id="file" type="file" class="form-control" accept="image/x-png,image/gif,image/jpeg" (change)="onFileChange($event)">
+            <div *ngIf="file.touched && file.invalid" class="alert alert-danger">
+                <div *ngIf="file.errors.required">Please upload Profile Picture</div>
+            </div>
+            <!-- <img [src]="imageSrc" *ngIf="imageSrc" style="height: 300px; width:500px"> -->
         </div>
         <!-- Comments -->
         <div class="form-group">
@@ -124,11 +94,11 @@
         </div>
 
         <!-- Json Data -->
-        <p>
+        <!-- <p>
             {{ form.value | json }}
-        </p>
+        </p> -->
 
-        <button class="btn btn-primary mr-3" [disabled]="!form.valid">Submit</button>
-        <button class="btn btn-danger">Reset</button>
+        <button type="submit" class="btn btn-primary mr-3" [disabled]="form.invalid">Submit</button>
+        <button type="reset" class="btn btn-danger">Reset</button>
     </form>
 </div>

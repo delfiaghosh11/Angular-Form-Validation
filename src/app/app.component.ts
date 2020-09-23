@@ -1,13 +1,17 @@
-import { Component } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { TopicValidators } from './topic.validators';
+import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
-  viewMode = '';
+export class AppComponent implements OnInit {
+  viewMode = 'others';
+  imageSrc: string;
+
+  ngOnInit(){}
 
   offshores = [
     {'id': 1, 'name': "Chennai"},
@@ -20,6 +24,20 @@ export class AppComponent {
   onshores = [
     {'id': 1, 'name': "US"},
     {'id': 2, 'name': "Non US"}
+  ];
+
+  skills = [
+    {'id': 1, 'name': "HTML5,CSS3,JS"},
+    {'id': 2, 'name': "Angular 8"},
+    {'id': 3, 'name': "Express JS"},
+    {'id': 4, 'name': "SASS"},
+    {'id': 5, 'name': "React JS"},
+    {'id': 6, 'name': "Node JS"},
+    {'id': 7, 'name': "ES5,ES6,ES7..."},
+    {'id': 8, 'name': "Veu JS"},
+    {'id': 9, 'name': "Mango DB"},
+    {'id': 10, 'name': "Bootstrap 4"},
+    {'id': 11, 'name': "Typescript"}
   ];
 
   form = new FormGroup({
@@ -37,10 +55,55 @@ export class AppComponent {
       Validators.required,
       Validators.pattern("^[a-zA-Z0-9]{12}$")
     ]),
-    'offshore': new FormControl('', Validators.required),
-    'onshore': new FormControl('', Validators.required),
+    // 'offshore': new FormControl('', Validators.required),
+    // 'onshore': new FormControl('', Validators.required),
+    // 'location': new FormControl('', Validators.required),
+    'topic': new FormArray([], TopicValidators.noOfTopics),
+    'file': new FormControl('', [Validators.required]),
     'comments': new FormControl('', Validators.required)
   });
+
+  setLocation(e){
+    if (e.target.value === 'offshore') {
+      this.viewMode='offshore';
+      this.form.addControl('offshore', new FormControl('', Validators.required));
+      this.form.removeControl('onshore');
+    } else {
+      this.viewMode='onshore';
+      this.form.addControl('onshore', new FormControl('', Validators.required));
+      this.form.removeControl('offshore');
+    }
+  }
+
+  changeTopic(el){
+    if (((this.form.get('topic').value).find(item => item === el.name)) === el.name) {
+      (this.form.get('topic').value).splice(((this.form.get('topic').value).indexOf(el.name)), 1);
+      // console.log(this.form.get('topic').value);
+    } else {
+      (this.form.get('topic')as FormArray).push(new FormControl(el.name));
+      // console.log(this.form.get('topic').value);
+    }
+  }
+
+  onFileChange(event) {
+    const reader = new FileReader();
+    
+    if(event.target.files && event.target.files.length) {
+      const [file] = event.target.files;
+      reader.readAsDataURL(file);
+    
+      reader.onload = () => {
+   
+        // this.imageSrc = reader.result as string;
+     
+        this.form.patchValue({
+          fileSource: reader.result
+        });
+   
+      };
+   
+    }
+  }
 
   get associateName(){
     return this.form.get('associateName');
@@ -62,12 +125,23 @@ export class AppComponent {
     return this.form.get('onshore');
   }
 
+  // get location(){
+  //   return this.form.get('location');
+  // }
+
+  get topic(){
+    return this.form.get('topic');
+  }
+
+  get file(){
+    return this.form.get('file');
+  }
+
   get comments(){
     return this.form.get('comments');
   }
 
   submit(form){
     console.log("Successfully Submitted: ", form);
-    
   }
 }
