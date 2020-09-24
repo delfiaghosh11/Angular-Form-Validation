@@ -5,26 +5,26 @@
         <!-- Associate Name -->
         <div class="form-group">
             <input formControlName="associateName" type="text" name="associateName" id="associateName" class="form-control" placeholder="Associate Name">
-            <div *ngIf="associateName.touched && associateName.invalid" class="alert alert-danger">
-                <div *ngIf="associateName.errors.required">Please enter the Associate Name.</div>
-                <div *ngIf="associateName.errors.minlength || associateName.errors.maxlength">Accepts Alphabets, space & Min 5 to Max 30 Char</div>
-                <div *ngIf="associateName.errors.pattern">Accepts Alphabets, space & Min 5 to Max 30 Char</div>
+            <div *ngIf="associateName.touched && associateName.invalid">
+                <div *ngIf="associateName.errors.required" class="text-danger">Please enter the Associate Name.</div>
+                <div *ngIf="associateName.errors.minlength || associateName.errors.maxlength" class="text-danger">Accepts Alphabets, space & Min 5 to Max 30 Char</div>
+                <div *ngIf="associateName.errors.pattern" class="text-danger">Accepts Alphabets, space & Min 5 to Max 30 Char</div>
             </div>
         </div>
         <!-- Associate ID -->
         <div class="form-group">
             <input formControlName="associateId" type="number" name="associateId" id="associateId" class="form-control" placeholder="Associate Id">
-            <div *ngIf="associateId.touched && associateId.invalid" class="alert alert-danger">
-                <div *ngIf="associateId.errors.required">Please enter the Associate Id.</div>
-                <div *ngIf="associateId.errors.pattern">Invalid Associate Id</div>
+            <div *ngIf="associateId.touched && associateId.invalid">
+                <div *ngIf="associateId.errors.required" class="text-danger">Please enter the Associate Id.</div>
+                <div *ngIf="associateId.errors.pattern" class="text-danger">Invalid Associate Id</div>
             </div>
         </div>
         <!-- Project ID -->
         <div class="form-group">
             <input formControlName="projectId" type="text" name="projectId" id="projectId" class="form-control" placeholder="Project ID">
-            <div *ngIf="projectId.touched && projectId.invalid" class="alert alert-danger">
-                <div *ngIf="projectId.errors.required">Please enter the Project Id.</div>
-                <div *ngIf="projectId.errors.pattern">Invalid Project Id</div>
+            <div *ngIf="projectId.touched && projectId.invalid">
+                <div *ngIf="projectId.errors.required" class="text-danger">Please enter the Project Id.</div>
+                <div *ngIf="projectId.errors.pattern" class="text-danger">Invalid Project Id</div>
             </div>
         </div>
         <!-- Radio Buttons -->
@@ -49,15 +49,18 @@
                   <option value="" selected disabled>Select Location</option>
                   <option *ngFor="let onshore of onshores" [ngValue]="onshore">{{ onshore.name }}</option>
                 </select>
-                <select *ngSwitchCase="'others'" id="location" class="form-control">
+                <select *ngSwitchCase="'others'" formControlName="location" name="location" id="location" class="form-control">
                     <option value="" selected disabled>Select Location</option>
                 </select>
             </div>
-            <div *ngIf="offshore?.touched && offshore?.invalid" class="alert alert-danger">
-                <div *ngIf="offshore.errors?.required">Please select Location.</div>
+            <div *ngIf="offshore?.touched && offshore?.invalid">
+                <div *ngIf="offshore.errors?.required" class="text-danger">Please select Location.</div>
             </div>
-            <div *ngIf="onshore?.touched && onshore?.invalid" class="alert alert-danger">
-                <div *ngIf="onshore.errors?.required">Please select Location.</div>
+            <div *ngIf="onshore?.touched && onshore?.invalid">
+                <div *ngIf="onshore.errors?.required" class="text-danger">Please select Location.</div>
+            </div>
+            <div *ngIf="location.touched && location.invalid">
+                <div *ngIf="location.errors.required" class="text-danger">Please select Location.</div>
             </div>
         </div>
         <!-- Checkboxes -->
@@ -71,25 +74,22 @@
                     </div>
                 </div>
             </div>
-            <!-- <div *ngIf="topic.errors.minLengthArray" class="alert alert-danger">Please select Min 5 skills.</div> -->
-            <div *ngIf="topic.touched && topic.invalid" class="alert alert-danger">
-                <div *ngIf="topic.errors.noOfTopics">Please select Min 5 skills.</div>
-            </div>
+            <div *ngIf="topic.invalid" class="text-danger mb-4">Please select Min 5 skills.</div>
         </div>
         <!-- Upload Image -->
         <div class="form-group">
             <label for="file">Upload Profile</label>
             <input formControlName="file" id="file" type="file" class="form-control" accept="image/x-png,image/gif,image/jpeg" (change)="onFileChange($event)">
-            <div *ngIf="file.touched && file.invalid" class="alert alert-danger">
-                <div *ngIf="file.errors.required">Please upload Profile Picture</div>
+            <div *ngIf="file.touched && file.invalid">
+                <div *ngIf="file.errors.required" class="text-danger">Please upload Profile Picture</div>
             </div>
             <!-- <img [src]="imageSrc" *ngIf="imageSrc" style="height: 300px; width:500px"> -->
         </div>
         <!-- Comments -->
         <div class="form-group">
             <textarea formControlName="comments" name="comments" id="comments" cols="30" rows="3" class="form-control" placeholder="Comments"></textarea>
-            <div *ngIf="comments.touched && comments.invalid" class="alert alert-danger">
-                <div *ngIf="comments.errors.required">Please enter comments.</div>
+            <div *ngIf="comments.touched && comments.invalid">
+                <div *ngIf="comments.errors.required" class="text-danger">Please enter comments.</div>
             </div>
         </div>
 

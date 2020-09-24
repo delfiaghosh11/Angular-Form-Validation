@@ -1,6 +1,6 @@
 import { TopicValidators } from './topic.validators';
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormArray, Form } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
@@ -11,6 +11,7 @@ export class AppComponent implements OnInit {
   viewMode = 'others';
   imageSrc: string;
 
+  // tslint:disable-next-line: typedef
   ngOnInit(){}
 
   offshores = [
@@ -57,8 +58,8 @@ export class AppComponent implements OnInit {
     ]),
     // 'offshore': new FormControl('', Validators.required),
     // 'onshore': new FormControl('', Validators.required),
-    // 'location': new FormControl('', Validators.required),
-    'topic': new FormArray([], TopicValidators.noOfTopics),
+    'location': new FormControl('', Validators.required),
+    'topic': new FormArray([], TopicValidators.minLength(5)),
     'file': new FormControl('', [Validators.required]),
     'comments': new FormControl('', Validators.required)
   });
@@ -68,20 +69,27 @@ export class AppComponent implements OnInit {
       this.viewMode='offshore';
       this.form.addControl('offshore', new FormControl('', Validators.required));
       this.form.removeControl('onshore');
+      this.form.get('location').reset;
+      this.form.get('location').setValue("on");
+      // console.log(this.form.get('location'));
+      
     } else {
       this.viewMode='onshore';
       this.form.addControl('onshore', new FormControl('', Validators.required));
       this.form.removeControl('offshore');
+      this.form.get('location').reset;
+      this.form.get('location').setValue("on");
+      // console.log(this.form.get('location'));
     }
   }
 
   changeTopic(el){
     if (((this.form.get('topic').value).find(item => item === el.name)) === el.name) {
-      (this.form.get('topic').value).splice(((this.form.get('topic').value).indexOf(el.name)), 1);
-      // console.log(this.form.get('topic').value);
+      (this.form.get('topic') as FormArray).removeAt((this.form.get('topic') as FormArray).controls.findIndex(item => item === el));
+      // console.log(this.form.get('topic'));
     } else {
-      (this.form.get('topic')as FormArray).push(new FormControl(el.name));
-      // console.log(this.form.get('topic').value);
+      (this.form.get('topic')as FormArray).push(new FormControl(el.name, TopicValidators.minLength(5)));
+      // console.log(this.form.get('topic'));
     }
   }
 
@@ -125,9 +133,9 @@ export class AppComponent implements OnInit {
     return this.form.get('onshore');
   }
 
-  // get location(){
-  //   return this.form.get('location');
-  // }
+  get location(){
+    return this.form.get('location');
+  }
 
   get topic(){
     return this.form.get('topic');

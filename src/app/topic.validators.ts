@@ -1,14 +1,10 @@
-import { AbstractControl, ValidationErrors } from '@angular/forms';
+import { AbstractControl, ValidatorFn, FormArray } from '@angular/forms';
 
 export class TopicValidators{
-    static noOfTopics(control: AbstractControl): ValidationErrors | null {
-        if ((control.value as number) >= 5) {
-            return {
-                minlength: {
-                    requiredLength: 5,
-                    actualLength: control.value.length
-                }
-            }
+    public static minLength(min: number): ValidatorFn | any {
+        return (control: AbstractControl[]) => {
+            if (!(control instanceof FormArray)) return;
+            return control.length < min ? { minLength: true } : null;
         }
     }
 }
