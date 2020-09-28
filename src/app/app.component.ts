@@ -84,12 +84,12 @@ export class AppComponent implements OnInit {
   }
 
   changeTopic(el){
-    if (((this.form.get('topic').value).find(item => item === el.name)) === el.name) {
-      (this.form.get('topic') as FormArray).removeAt((this.form.get('topic') as FormArray).controls.findIndex(item => item === el));
-      // console.log(this.form.get('topic'));
+    if (((this.topic.value).find(item => item === el.name)) === el.name) {
+      (this.topic as FormArray).removeAt((this.topic as FormArray).controls.findIndex(item => item === el));
+      console.log(this.topic);
     } else {
-      (this.form.get('topic')as FormArray).push(new FormControl(el.name, TopicValidators.minLength(5)));
-      // console.log(this.form.get('topic'));
+      (this.topic as FormArray).push(new FormControl(el.name, TopicValidators.minLength(5)));
+      console.log(this.topic);
     }
   }
 

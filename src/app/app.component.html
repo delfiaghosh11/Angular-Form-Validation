@@ -1,104 +1,115 @@
 <div class="container my-3">
-    <h1 class="my-2">Form Validation <span style="color: red; font-size: 40px;">*</span></h1>
-    <!-- Form -->
-    <form [formGroup]="form" (ngSubmit)="submit(form)">
-        <!-- Associate Name -->
-        <div class="form-group">
-            <input formControlName="associateName" type="text" name="associateName" id="associateName" class="form-control" placeholder="Associate Name">
-            <div *ngIf="associateName.touched && associateName.invalid">
-                <div *ngIf="associateName.errors.required" class="text-danger">Please enter the Associate Name.</div>
-                <div *ngIf="associateName.errors.minlength || associateName.errors.maxlength" class="text-danger">Accepts Alphabets, space & Min 5 to Max 30 Char</div>
-                <div *ngIf="associateName.errors.pattern" class="text-danger">Accepts Alphabets, space & Min 5 to Max 30 Char</div>
-            </div>
+  <h1 class="my-2">Form Validation <span style="color: red; font-size: 40px;">*</span></h1>
+  <!-- Form -->
+  <form [formGroup]="form" (ngSubmit)="submit(form)">
+    <!-- Associate Name -->
+    <div class="form-group">
+      <input formControlName="associateName" type="text" name="associateName" id="associateName" class="form-control"
+        placeholder="Associate Name">
+      <div *ngIf="associateName.touched && associateName.invalid">
+        <div *ngIf="associateName.errors.required" class="text-danger">Please enter the Associate Name.</div>
+        <div *ngIf="associateName.errors.minlength || associateName.errors.maxlength" class="text-danger">Accepts
+          Alphabets, space & Min 5 to Max 30 Char</div>
+        <div *ngIf="associateName.errors.pattern" class="text-danger">Accepts Alphabets, space & Min 5 to Max 30 Char
         </div>
-        <!-- Associate ID -->
-        <div class="form-group">
-            <input formControlName="associateId" type="number" name="associateId" id="associateId" class="form-control" placeholder="Associate Id">
-            <div *ngIf="associateId.touched && associateId.invalid">
-                <div *ngIf="associateId.errors.required" class="text-danger">Please enter the Associate Id.</div>
-                <div *ngIf="associateId.errors.pattern" class="text-danger">Invalid Associate Id</div>
-            </div>
+      </div>
+    </div>
+    <!-- Associate ID -->
+    <div class="form-group">
+      <input formControlName="associateId" type="number" name="associateId" id="associateId" class="form-control"
+        placeholder="Associate Id">
+      <div *ngIf="associateId.touched && associateId.invalid">
+        <div *ngIf="associateId.errors.required" class="text-danger">Please enter the Associate Id.</div>
+        <div *ngIf="associateId.errors.pattern" class="text-danger">Invalid Associate Id</div>
+      </div>
+    </div>
+    <!-- Project ID -->
+    <div class="form-group">
+      <input formControlName="projectId" type="text" name="projectId" id="projectId" class="form-control"
+        placeholder="Project ID">
+      <div *ngIf="projectId.touched && projectId.invalid">
+        <div *ngIf="projectId.errors.required" class="text-danger">Please enter the Project Id.</div>
+        <div *ngIf="projectId.errors.pattern" class="text-danger">Invalid Project Id</div>
+      </div>
+    </div>
+    <!-- Radio Buttons -->
+    <div class="form-group">
+      <div class="form-check">
+        <label class="form-check-label mr-5" for="exampleRadios1">
+          <input name="shore" class="form-check-input" type="radio" id="offshore" value="offshore"
+            (change)="setLocation($event)">Offshore
+        </label>
+        <label class="form-check-label" for="exampleRadios2">
+          <input name="shore" class="form-check-input" type="radio" id="onshore" value="onshore"
+            (change)="setLocation($event)">Onshore
+        </label>
+      </div>
+    </div>
+    <!-- Dropdown List for Location -->
+    <div class="form-group">
+      <div [ngSwitch]="viewMode">
+        <select *ngSwitchCase="'offshore'" formControlName="offshore" name="offshore" id="offshore"
+          class="form-control">
+          <option value="" selected disabled>Select Location</option>
+          <option *ngFor="let offshore of offshores" [ngValue]="offshore">{{ offshore.name }}</option>
+        </select>
+        <select *ngSwitchCase="'onshore'" formControlName="onshore" name="onshore" id="onshore" class="form-control">
+          <option value="" selected disabled>Select Location</option>
+          <option *ngFor="let onshore of onshores" [ngValue]="onshore">{{ onshore.name }}</option>
+        </select>
+        <select *ngSwitchCase="'others'" formControlName="location" name="location" id="location" class="form-control">
+          <option value="" selected disabled>Select Location</option>
+        </select>
+      </div>
+      <div *ngIf="offshore?.touched && offshore?.invalid">
+        <div *ngIf="offshore.errors?.required" class="text-danger">Please select Location.</div>
+      </div>
+      <div *ngIf="onshore?.touched && onshore?.invalid">
+        <div *ngIf="onshore.errors?.required" class="text-danger">Please select Location.</div>
+      </div>
+      <div *ngIf="location.touched && location.invalid">
+        <div *ngIf="location.errors.required" class="text-danger">Please select Location.</div>
+      </div>
+    </div>
+    <!-- Checkboxes -->
+    <div class="form-group">
+      <div class="row no-gutters my-4">
+        <div class="col-lg-4" *ngFor="let skill of skills">
+          <div class="form-check form-control my-1" style="border: none;">
+            <label class="form-check-label" for="defaultCheck1">
+              <input formArrayName="topic" name="topic" id="topic" class="form-check-input" type="checkbox"
+                [ngValue]="skill" (change)="changeTopic(skill)"> {{ skill.name }}
+            </label>
+          </div>
         </div>
-        <!-- Project ID -->
-        <div class="form-group">
-            <input formControlName="projectId" type="text" name="projectId" id="projectId" class="form-control" placeholder="Project ID">
-            <div *ngIf="projectId.touched && projectId.invalid">
-                <div *ngIf="projectId.errors.required" class="text-danger">Please enter the Project Id.</div>
-                <div *ngIf="projectId.errors.pattern" class="text-danger">Invalid Project Id</div>
-            </div>
-        </div>
-        <!-- Radio Buttons -->
-        <div class="form-group">
-            <div class="form-check">
-                <label class="form-check-label mr-5" for="exampleRadios1">
-                  <input name="shore" class="form-check-input" type="radio" id="offshore" value="offshore" (change)="setLocation($event)">Offshore
-                </label>
-                <label class="form-check-label" for="exampleRadios2">
-                  <input name="shore" class="form-check-input" type="radio" id="onshore" value="onshore" (change)="setLocation($event)">Onshore
-                </label>
-            </div>
-        </div>
-        <!-- Dropdown List for Location -->
-        <div class="form-group">
-            <div [ngSwitch]="viewMode">
-                <select *ngSwitchCase="'offshore'" formControlName="offshore" name="offshore" id="offshore" class="form-control">
-                  <option value="" selected disabled>Select Location</option>
-                  <option *ngFor="let offshore of offshores" [ngValue]="offshore">{{ offshore.name }}</option>
-                </select>
-                <select *ngSwitchCase="'onshore'" formControlName="onshore" name="onshore" id="onshore" class="form-control">
-                  <option value="" selected disabled>Select Location</option>
-                  <option *ngFor="let onshore of onshores" [ngValue]="onshore">{{ onshore.name }}</option>
-                </select>
-                <select *ngSwitchCase="'others'" formControlName="location" name="location" id="location" class="form-control">
-                    <option value="" selected disabled>Select Location</option>
-                </select>
-            </div>
-            <div *ngIf="offshore?.touched && offshore?.invalid">
-                <div *ngIf="offshore.errors?.required" class="text-danger">Please select Location.</div>
-            </div>
-            <div *ngIf="onshore?.touched && onshore?.invalid">
-                <div *ngIf="onshore.errors?.required" class="text-danger">Please select Location.</div>
-            </div>
-            <div *ngIf="location.touched && location.invalid">
-                <div *ngIf="location.errors.required" class="text-danger">Please select Location.</div>
-            </div>
-        </div>
-        <!-- Checkboxes -->
-        <div class="from-group">
-            <div class="row no-gutters my-4">
-                <div class="col-lg-4" *ngFor="let skill of skills">
-                    <div class="form-check form-control my-1" style="border: none;">
-                        <label class="form-check-label" for="defaultCheck1">
-                            <input formArrayName="topic" name="topic" id="topic" class="form-check-input" type="checkbox" [ngValue]="skill" (change)="changeTopic(skill)"> {{ skill.name }}
-                        </label>
-                    </div>
-                </div>
-            </div>
-            <div *ngIf="topic.invalid" class="text-danger mb-4">Please select Min 5 skills.</div>
-        </div>
-        <!-- Upload Image -->
-        <div class="form-group">
-            <label for="file">Upload Profile</label>
-            <input formControlName="file" id="file" type="file" class="form-control" accept="image/x-png,image/gif,image/jpeg" (change)="onFileChange($event)">
-            <div *ngIf="file.touched && file.invalid">
-                <div *ngIf="file.errors.required" class="text-danger">Please upload Profile Picture</div>
-            </div>
-            <!-- <img [src]="imageSrc" *ngIf="imageSrc" style="height: 300px; width:500px"> -->
-        </div>
-        <!-- Comments -->
-        <div class="form-group">
-            <textarea formControlName="comments" name="comments" id="comments" cols="30" rows="3" class="form-control" placeholder="Comments"></textarea>
-            <div *ngIf="comments.touched && comments.invalid">
-                <div *ngIf="comments.errors.required" class="text-danger">Please enter comments.</div>
-            </div>
-        </div>
+      </div>
+      <div *ngIf="topic.invalid" class="text-danger mb-4">Please select Min 5 skills.</div>
+    </div>
+    <!-- Upload Image -->
+    <div class="form-group">
+      <label for="file">Upload Profile</label>
+      <input formControlName="file" id="file" type="file" class="form-control" accept="image/x-png,image/gif,image/jpeg"
+        (change)="onFileChange($event)">
+      <div *ngIf="file.touched && file.invalid">
+        <div *ngIf="file.errors.required" class="text-danger">Please upload Profile Picture</div>
+      </div>
+      <!-- <img [src]="imageSrc" *ngIf="imageSrc" style="height: 300px; width:500px"> -->
+    </div>
+    <!-- Comments -->
+    <div class="form-group">
+      <textarea formControlName="comments" name="comments" id="comments" cols="30" rows="3" class="form-control"
+        placeholder="Comments"></textarea>
+      <div *ngIf="comments.touched && comments.invalid">
+        <div *ngIf="comments.errors.required" class="text-danger">Please enter comments.</div>
+      </div>
+    </div>
 
-        <!-- Json Data -->
-        <!-- <p>
+    <!-- Json Data -->
+    <!-- <p>
             {{ form.value | json }}
         </p> -->
 
-        <button type="submit" class="btn btn-primary mr-3" [disabled]="form.invalid">Submit</button>
-        <button type="reset" class="btn btn-danger">Reset</button>
-    </form>
+    <button type="submit" class="btn btn-primary mr-3" [disabled]="form.invalid">Submit</button>
+    <button type="reset" class="btn btn-danger">Reset</button>
+  </form>
 </div>
